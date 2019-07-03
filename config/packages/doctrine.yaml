@@ -1,0 +1,58 @@
+parameters:
+    # Adds a fallback DATABASE_URL if the env var is not set.
+    # This allows you to run cache:warmup even if your
+    # environment variables are not available yet.
+    # You should not need to change this value.
+    env(DATABASE_URL): ''
+
+doctrine:
+    dbal:
+        # configure these for your database server
+        default_connection: default
+        connections:
+            default:
+                driver: 'pdo_mysql'
+                server_version: '5.7'
+                charset: utf8
+                default_table_options:
+                    charset: utf8mb4 #utf8
+                    collate: utf8mb4_unicode_ci #latin1_swedish_ci
+                    engine: MyISAM
+                url: '%env(DATABASE_MAIN_URL)%'
+                mapping_types:
+                    enum: string
+            moderation:
+                driver: 'pdo_mysql'
+                server_version: '5.7'
+                charset: utf8
+                default_table_options:
+                    charset: utf8mb4 #utf8
+                    collate: utf8mb4_unicode_ci #latin1_swedish_ci
+                    engine: MyISAM
+                url: '%env(DATABASE_CONSTELLATION_URL)%'
+                mapping_types:
+                    enum: string
+    orm:
+        default_entity_manager: default
+        auto_generate_proxy_classes: true
+        entity_managers:
+            default:
+                connection: default
+                naming_strategy: doctrine.orm.naming_strategy.underscore
+                mappings:
+                    Main:
+                        is_bundle: false
+                        type: annotation
+                        dir: '%kernel.project_dir%/src/Entity/Main'
+                        prefix: 'App\Entity\Main'
+                        alias: Main
+            moderation:
+                connection: moderation
+                naming_strategy: doctrine.orm.naming_strategy.underscore
+                mappings:
+                    Moderation:
+                        is_bundle: false
+                        type: annotation
+                        dir: '%kernel.project_dir%/src/Entity/Moderation'
+                        prefix: 'App\Entity\Moderation'
+                        alias: Moderation

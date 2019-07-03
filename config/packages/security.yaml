@@ -1,0 +1,22 @@
+security:
+    providers:
+        api_key_user_provider:
+            entity:
+                class: AppBundle:User
+                property: userToken
+
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        main:
+            anonymous: ~
+            logout: ~
+
+            guard:
+                authenticators:
+                - App\Security\TokenAuthenticator
+
+            stateless: true
+            provider: api_key_user_provider
